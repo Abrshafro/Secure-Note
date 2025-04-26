@@ -49,7 +49,7 @@ class AboutScreen extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             const Text(
-              'Group 2\nContact: zedoyetefe@gnail.com',
+              'Group 1\nContact: abrhammgetahun@gmail.com',
               style: TextStyle(fontSize: 16),
             ),
           ],
