@@ -23,7 +23,6 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     // Fetch notes on initialization
-    // username = ApiService.fetchUsername() as String;
     futureNotes = ApiService.getNotes(context);
   }
 
@@ -159,8 +158,25 @@ class _HomeScreenState extends State<HomeScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => NoteDetailScreen(note: note)),
-                      );
+                          builder: (context) => NoteDetailScreen(
+                            note: note,
+                            onDeleteSuccess: () {
+                              // Refresh notes immediately after deletion
+                              setState(() {
+                                futureNotes = ApiService.getNotes(
+                                    context); // Refresh the notes
+                              });
+                            },
+                          ),
+                        ),
+                      ).then((updatedNote) {
+                        if (updatedNote != null) {
+                          setState(() {
+                            // Update the note in the list with the updated note
+                            notes[index] = updatedNote;
+                          });
+                        }
+                      });
                     },
                   ),
                 );

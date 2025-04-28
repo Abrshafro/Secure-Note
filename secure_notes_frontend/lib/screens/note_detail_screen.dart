@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:secure_notes_frontend/services/api_service.dart';
 import '../models/note.dart';
 import '../widgets/custom_textfield.dart';
 
 class NoteDetailScreen extends StatelessWidget {
   final Note note;
+  final Function onDeleteSuccess; // Add this callback to notify HomeScreen
 
-  const NoteDetailScreen({super.key, required this.note});
+  const NoteDetailScreen(
+      {super.key, required this.note, required this.onDeleteSuccess});
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +26,43 @@ class NoteDetailScreen extends StatelessWidget {
           onPressed: () =>
               Navigator.pop(context), // Navigate back on back icon press
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.delete,
+            color: Colors.white,
+            size: 28.0,),
+            onPressed: () async {
+              // Confirm deletion
+              bool confirmDelete = await _showDeleteConfirmationDialog(context);
+              if (confirmDelete) {
+                try {
+                  // Call the delete API
+                  await ApiService.deleteNote(context, note.id);
+
+                  // Notify HomeScreen to refresh the notes
+                  onDeleteSuccess();
+
+                  // Navigate back to the previous screen after successful deletion
+                  Navigator.pop(context);
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Note deleted successfully!'),
+                      backgroundColor: Colors.green,
+                    ),
+                  );
+                } catch (error) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Error deleting note: $error'),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
+              }
+            },
+          ),
+        ],
       ),
       body: Stack(
         children: [
@@ -77,7 +117,51 @@ class NoteDetailScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 24),
                   ElevatedButton(
-                    onPressed: () {}, // Keep the original function call
+                    onPressed: () async {
+                      if (titleController.text.isEmpty ||
+                          contentController.text.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('All fields are required!'),
+                            backgroundColor: Colors.redAccent,
+                          ),
+                        );
+                        return;
+                      }
+
+                      try {
+                        // Update the note
+                        await ApiService.updateNote(
+                          context,
+                          note.id,
+                          titleController.text,
+                          contentController.text,
+                        );
+
+                        // Create a new updated note with the new details
+                        Note updatedNote = note.copyWith(
+                          title: titleController.text,
+                          content: contentController.text,
+                        );
+
+                        // Pass the updated note back to the previous screen
+                        Navigator.pop(context, updatedNote);
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Note updated successfully!'),
+                            backgroundColor: Colors.green,
+                          ),
+                        );
+                      } catch (error) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Error updating note: $error'),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                      }
+                    },
                     style: ElevatedButton.styleFrom(
                       minimumSize:
                           const Size.fromHeight(50), // Full-width button
@@ -103,5 +187,32 @@ class NoteDetailScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Future<bool> _showDeleteConfirmationDialog(BuildContext context) async {
+    return await showDialog<bool>(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Delete Note'),
+              content: const Text('Are you sure you want to delete this note?'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(false); // User canceled
+                  },
+                  child: const Text('Cancel'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(true); // User confirmed
+                  },
+                  child: const Text('Delete'),
+                ),
+              ],
+            );
+          },
+        ) ??
+        false; // Default to false if dialog is dismissed
   }
 }
