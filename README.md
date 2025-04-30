@@ -4,7 +4,7 @@ Secure-Note is a mobile application designed to help users securely store and ma
 The app uses encryption techniques to protect sensitive notes from unauthorized access.  The app ensures that users’ data remains private, even if the device is lost or
 accessed by others.
 
-Group-Members                     ID-Number
+Group-Members                     
 1.Abrham Getahun................bdu1404065
 2.Nahom Anteneh.................bdu1404607
 3. Guyo Dido....................bdu1410553
