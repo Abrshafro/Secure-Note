@@ -54,8 +54,8 @@ class NoteDetailScreen extends StatelessWidget {
                 } catch (error) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text('Error deleting note: $error'),
-                      backgroundColor: Colors.red,
+                      content: Text('Error while : $error'),
+                      backgroundColor: Colors.redAccent,
                     ),
                   );
                 }
@@ -85,7 +85,7 @@ class NoteDetailScreen extends StatelessWidget {
                 children: [
                   const SizedBox(height: 20),
                   Text(
-                    'Edit Your Note',
+                    'Edit  Note',
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
@@ -149,14 +149,14 @@ class NoteDetailScreen extends StatelessWidget {
 
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
-                            content: Text('Note updated successfully!'),
+                            content: Text('Notes updated successfully!'),
                             backgroundColor: Colors.green,
                           ),
                         );
                       } catch (error) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: Text('Error updating note: $error'),
+                            content: Text('Error while updating : $error'),
                             backgroundColor: Colors.red,
                           ),
                         );
@@ -173,7 +173,7 @@ class NoteDetailScreen extends StatelessWidget {
                       elevation: 5,
                     ),
                     child: const Text(
-                      'Save Changes',
+                      'Save Change',
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -194,8 +194,8 @@ class NoteDetailScreen extends StatelessWidget {
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: const Text('Delete Note'),
-              content: const Text('Are you sure you want to delete this note?'),
+              title: const Text('Delete Notes'),
+              content: const Text('Are you sure you want to delete this note  ?'),
               actions: [
                 TextButton(
                   onPressed: () {
