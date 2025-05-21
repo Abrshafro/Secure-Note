@@ -137,11 +137,11 @@ class _HomeScreenState extends State<HomeScreen> {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             // Show an error message if something went wrong
-            return Center(child: Text('Error: ${snapshot.error}'));
+            return Center(child: Text('Error Found: ${snapshot.error}'));
           } else if (snapshot.hasData) {
             final notes = snapshot.data!;
             if (notes.isEmpty) {
-              return const Center(child: Text('No notes found.'));
+              return const Center(child: Text('No notes found .'));
             }
             return ListView.builder(
               itemCount: notes.length,
@@ -184,7 +184,7 @@ class _HomeScreenState extends State<HomeScreen> {
             );
           } else {
             // Show a message if no data is available
-            return const Center(child: Text('No data available.'));
+            return const Center(child: Text('No data available in the app.'));
           }
         },
       ),
