@@ -1,5 +1,8 @@
-import 'dart:convert';
+// RegisterScreen: A Flutter widget that provides a user interface for user registration.
+// This screen collects username, password, and confirm password inputs, validates them,
+// and communicates with the ApiService to register a new user.
 
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:secure_notes_frontend/services/api_service.dart';
 import '../widgets/custom_textfield.dart';
@@ -11,6 +14,7 @@ class RegisterScreen extends StatelessWidget {
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     void registerUser() async {
