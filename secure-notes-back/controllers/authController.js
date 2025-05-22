@@ -2,21 +2,34 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
+const bcrypt = require('bcrypt');
+const User = require('../models/User');
+
 exports.register = async (req, res) => {
     const { username, password } = req.body;
 
     try {
-        
-        const passwordHash = bcrypt.hashSync(password);
+        // Basic validation
+        if (!username || !password) {
+            console.warn('Username or password missing in request body.');
+        }
 
-        const newUser = new User({ username, passwordHash});
+        // Hash the password asynchronously
+        const passwordHash = await bcrypt.hash(password, 10); // using async version
+
+        // Create and save the new user
+        const newUser = new User({ username, passwordHash });
         await newUser.save();
 
+        // Respond to client
         res.status(201).json({ message: 'User registered successfully' });
+
     } catch (err) {
+        console.error('Error during user registration:', err.message);
         res.status(500).json({ error: err.message });
     }
 };
+
 
 exports.login = async (req, res) => {
     const { username, password } = req.body;
